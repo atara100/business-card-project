@@ -42,7 +42,7 @@ function Header() {
                                      <NavLink
                                           className="nav-link"
                                           aria-current="page"
-                                          to="/businesscard"
+                                          to="/"
                                       >
                                           My Favorite Cards
                                       </NavLink>

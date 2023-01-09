@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import Title from "../components/Title";
 
@@ -16,9 +16,9 @@ function CardsList() {
 
         <hr className=" w-50 mx-auto"/>
 
-        <button onClick={navigateAddCard} className="btn btn-primary mt-3">
+        <Link to={`/businesscard`} onClick={navigateAddCard} className="btn btn-primary mt-3">
             <i className="bi bi-plus-circle-fill me-2"></i> Add Card
-        </button>
+        </Link>
 
 
         <Footer/>

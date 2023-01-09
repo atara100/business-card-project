@@ -9,3 +9,7 @@
     max-width: 800px;
     align-items: center;
 }
+
+.cardWidth{
+    width: 19rem;
+}

@@ -1,54 +1,69 @@
 import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { getToken } from "../auth/tokenManager";
 import ButtonsBar from "../components/ButtonsBar";
 import Footer from "../components/Footer";
 import Title from "../components/Title";
+import { deleteRequest, getRequest } from "../services/apiService";
 import './Home.css';
 
-interface Icard{
-  _id:number;
-  title:string;
-  description:string;
+export interface Icard{
+   _id:number;
+   title:string;
+   description:string;
+   address:string;
+   phone:string;
+   image:string;
+   bizNumber:string;
+   createdAt:Date;
 }
 
-function Home() {
+interface Props{
+  userEmail:string;
+}
 
-    const data=[{id:1,name:'atara'},{id:2,name:'beni'},{id:3,name:'calvine'},{id:4,name:'david'}];
-
-    const [display,setDisplay]=useState('grid');
-    const [filtered,setFiltered]=useState([...data]);
-    const [search,setSearch]=useState('');
+function Home({userEmail}:Props) {
+    
     const [displayCards,setDisplayCards]=useState<Array<Icard>>([]);
+    const [display,setDisplay]=useState('grid');
+    const [filtered,setFiltered]=useState([...displayCards]);
+    const [search,setSearch]=useState('');
+
+       function fetchDisplayCards(){
+       const res=getRequest('cards');
+         if(!res) return;
+        res.then(res=>res.json())
+            .then(json=>{
+                setDisplayCards(json);
+                setFiltered(json);
+            })
+    }
+    useEffect(fetchDisplayCards,[]);
+    
 
     function handleSearch(e:React.ChangeEvent<HTMLInputElement>){
       //get value
       const value=e.target.value;
-      let res=[...data]
+      let res=[...displayCards]
       if(value ){
-        //filter cards
-        const stripVal=value.trim().toLowerCase()
-        res=[...data].filter(card=>card.name.toLowerCase().includes(stripVal))
-      
+      //filter cards
+      const stripVal=value.trim().toLowerCase()
+      res=[...displayCards].filter(card=>card.title.toLowerCase().includes(stripVal));      
       }
       //update state
        setSearch(value);
        setFiltered(res);
     }
 
-    function fetchDisplayCards(){
-      fetch('http://localhost:3000/cards/',{
-          method:'GET',
-          headers:{
-             'x-auth-token': getToken()
-          }
-        })
-            .then(res=>res.json())
-            .then(json=>{
-                setDisplayCards(json)
-            })
+    function delCard(card:Icard){
+      const res = deleteRequest(`cards/${card._id}`);
+      if(!res) return; 
+      res.then(res=>res.json())
+             .then(json=>{
+              fetchDisplayCards();
+              setDisplayCards([...displayCards]);
+             })
     }
-
-    useEffect(fetchDisplayCards,[]);
 
     return ( 
         <>
@@ -65,13 +80,23 @@ function Home() {
 
          <div className={`${display} p-5`}>
           {
-           displayCards.map((card)=>
-          <div key={card._id} className="card m-4"  >
-           <div className="card-body">
-            <h5 className="card-title">{card.title}</h5>
-            <p className="card-text">{card.description}</p>
-           </div>
-          </div>   
+           filtered.map((card)=>
+           <div key={card._id} className="card p-3 colms-5 cardWidth">
+              <img src={card.image} className="card-img-top" alt={card.title}/>
+              <div className="card-body">
+                 <h5 className="card-title">{card.title}</h5>
+                 <h6 className="card-title">{card.description}</h6>
+                 <hr />
+                 <h6 className="card-text"><b>Tel:</b> {card.phone}</h6>
+                 <h6 className="card-text"><b>Address:</b> {card.address}</h6>
+                 <h6 className="card-text"><b>Card Number:</b> {card.bizNumber}</h6>
+                 <i className="bi bi-hand-thumbs-up"></i>
+              </div>
+              <div className="card-body mx-auto">
+                <Link to={`/updatecard/${card._id}`} className="btn"><i className="bi bi-pencil-fill me-3"></i></Link>
+                <button onClick={()=>delCard(card)} className="btn"><i className="bi bi-trash3-fill"></i></button>
+              </div>
+            </div>  
             )
            } 
          </div>

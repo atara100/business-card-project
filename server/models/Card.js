@@ -7,12 +7,6 @@ const cardSchema = new mongoose.Schema({
         minlength: 2,
         maxlength: 256,
     },
-    subTitle: {
-        type: String,
-        required: true,
-        minlength: 2,
-        maxlength: 256,
-    },
     description: {
         type: String,
         required: true,
@@ -32,18 +26,15 @@ const cardSchema = new mongoose.Schema({
         maxlength: 14,
     },
     image: {
-        url: {
             type: String,
             required: true,
             minlength: 2,
             maxlength: 1024,
-        },
-        alt: { type: String, required: true, minlength: 2, maxlength: 256 },
     },
     bizNumber: {
         type: String,
         minlength: 7,
-        maxlength: 7,
+        maxlength:50,
         required: true,
     },
     createdAt: {

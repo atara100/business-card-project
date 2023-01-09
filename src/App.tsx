@@ -1,4 +1,4 @@
-import {createContext } from 'react';
+import {createContext, useState } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import './App.css';
@@ -8,12 +8,13 @@ import SignUp from './auth/SignUp';
 import { removeToken, setToken } from './auth/tokenManager';
 import Header from './components/Header';
 import About from './pages/About';
-import BusinessCard from './pages/BusinessCard';
+import BusinessCard from './pages/AddCard';
 import CardsList from './pages/CardsList';
 import Home from './pages/Home';
+import UpdateCard from './pages/UpdateCard';
 import { postRequest } from './services/apiService';
 
-interface ILodinData{
+interface ILoginData{
   email:string;
   password:string;
 }
@@ -21,20 +22,24 @@ interface ILodinData{
 interface Context{
   login:Function;
   handlelogout:Function;
+  userEmail:string;
 }
 
 export const AppContext = createContext <Context | null>(null);
 
 function App() {
 
+  const[userEmail,setUserEmail]=useState<string>('');
+
   const navigate=useNavigate();
 
-  function login(data:ILodinData) {
-        const res=postRequest('users/login',data,false)
+  function login(data:ILoginData) {
+        const res=postRequest('users/login',data,false);
         if(!res) return;
            res.then(response => response.json())
             .then(json => {
                 setToken(json.token);
+                setUserEmail(data.email);           
                 navigate('/');
             })
   }
@@ -46,20 +51,21 @@ function App() {
 
 
   return (
-  <AppContext.Provider value={{login,handlelogout}}>
+  <AppContext.Provider value={{login,handlelogout,userEmail}}>
 
     <Header />
     <ToastContainer/>
 
     <Routes>
-      <Route path='/' element={<Home/>}></Route>
+      <Route path='/' element={<Home userEmail={userEmail}/>}></Route>
       <Route path='/about' element={<About/>}></Route>
       <Route path='/signup' element={<SignUp/>}></Route>
       <Route path='/business' element={<Business/>}></Route>
       <Route path='/businesscard' element={<BusinessCard/>}></Route>
       <Route path='/login' element={<Login login={login}/>}></Route>
       <Route path='/cardslist' element={<CardsList/>}></Route>
-
+      <Route path='/updatecard/:id' element={<UpdateCard/>}></Route>
+      
     </Routes>
   </AppContext.Provider>
   );
