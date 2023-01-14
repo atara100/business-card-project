@@ -11,6 +11,7 @@ function UpdateCard() {
     const navigate = useNavigate();
 
     const [title,setTitle]=useState<string>('');
+    const [shortdescription,setshortdescription]=useState<string>('');
     const [description,setdescription]=useState<string>('');
     const [address,setaddress]=useState<string>('');
     const [phone,setphone]=useState<string>('');
@@ -26,6 +27,7 @@ function UpdateCard() {
                     return;
                 }
                 setTitle(json.title);
+                setshortdescription(json.shortdescription)
                 setdescription(json.description);
                 setaddress(json.address);
                 setphone(json.phone);
@@ -36,6 +38,7 @@ function UpdateCard() {
     function handleClick(){
         const schema = Joi.object().keys({
             title: Joi.string().required().min(3),
+            shortdescription:Joi.string().required().min(10).max(20),
             description: Joi.string().required().min(10),
             address: Joi.string().required().min(3),
             phone: Joi.string().required().min(9),
@@ -44,6 +47,7 @@ function UpdateCard() {
 
         const { error, value } = schema.validate({
             title,
+            shortdescription,
             description,
             address,
             phone,
@@ -83,6 +87,12 @@ function UpdateCard() {
                 <label className="mb-2" htmlFor="">Business Name</label>
                 <input className="form-control" type="text"
                  value={title} onChange={(e)=>setTitle(e.target.value)}/>
+            </div>
+
+            <div className="mb-3">
+                <label className="mb-2" htmlFor="">Short description</label>
+               <input className="form-control" type="text" 
+                value={shortdescription} onChange={(e)=>setshortdescription(e.target.value)}/>
             </div>
 
             <div className="mb-3">

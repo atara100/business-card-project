@@ -50,7 +50,7 @@ module.exports = {
                 throw 'error get details';
             }
 
-            const user = await User.findById(value.id);
+            const user = await User.findById({_id:value.id});
             if (!user || !user.isBiz) throw "Invalid user id, no such user.";
 
             const cards = await Card.find({ user_id: user._id });
@@ -69,6 +69,7 @@ module.exports = {
 
             const schema = joi.object({
                 title: joi.string().min(2).max(256).required(),
+                shortdescription:joi.string().min(2).max(30).required(),
                 description: joi.string().min(2).max(1024).required(),
                 address: joi.string().min(2).max(256).required(),
                 phone: joi.string().min(9).max(14).required(),
@@ -84,6 +85,7 @@ module.exports = {
 
             const card = new Card({
                 title: value.title,
+                shortdescription:value.shortdescription,
                 description: value.description,
                 address: value.address,
                 phone: value.phone,
@@ -108,6 +110,7 @@ module.exports = {
 
             const schema = joi.object({
                 title: joi.string().min(2).max(256).required(),
+                shortdescription:joi.string().min(2).max(30).required(),
                 description: joi.string().min(2).max(1024).required(),
                 address: joi.string().min(2).max(256).required(),
                 phone: joi.string().min(9).max(14).required(),
@@ -151,15 +154,7 @@ module.exports = {
             if (error) {
                 console.log(error.details[0].message);
                 throw `error delete card`;
-            }
-
-            // const deleted = await Card.findOneAndRemove({
-            //     _id: value.id
-            //     // user_id: user._id,
-            // });
-
-            // if (!deleted) throw "failed to delete";
-            // res.json(deleted); 
+            } 
             
             const deleted=await Card.findOne({_id: value._id})
             await Card.deleteOne(value).exec();

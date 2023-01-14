@@ -1,7 +1,13 @@
 import { NavLink } from "react-router-dom";
 import Logout from "../auth/Logout";
 
-function Header() {
+
+interface Props{
+    userName:string;
+    userId:string;
+}
+
+function Header({userId,userName}:Props) {
     return ( 
 <header>
    <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -32,7 +38,7 @@ function Header() {
                                 <NavLink
                                     className="nav-link"
                                     aria-current="page"
-                                    to="/cardslist"
+                                    to={`/mycards/${userId}`}
                                 >
                                     My Cards
                                 </NavLink>
@@ -42,12 +48,17 @@ function Header() {
                                      <NavLink
                                           className="nav-link"
                                           aria-current="page"
-                                          to="/"
+                                          to="/favourites"
                                       >
                                           My Favorite Cards
                                       </NavLink>
                                   </li>               
                         </ul>
+            {
+                userName &&
+                 <h5 className="card-title mx-auto text-danger">Hello! {userName}</h5>
+            }
+
 
                         <ul className="navbar-nav d-flex">
                           
