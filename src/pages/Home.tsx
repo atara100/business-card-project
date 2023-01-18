@@ -94,7 +94,7 @@ function Home({userId,handleLike,isAdmin,likesArr}:Props) {
         />
 
         <DisplayCard
-         handleLike={handleLike} display={display} cardsArr={filtered} userId={userId} isAdmin={isAdmin} delCard={delCard} likesArr={likesArr}
+         likesArr={likesArr} userId={userId} handleLike={handleLike} display={display} cardsArr={filtered}  isAdmin={isAdmin} delCard={delCard}
         />
 
         </> 

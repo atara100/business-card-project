@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import BackButton from "../components/BackButton";
 import DisplayCard from "../components/DisplayCard";
 import Footer from "../components/Footer";
@@ -8,17 +9,29 @@ interface Props{
    userId:string;
    handleLike:Function;
    isAdmin:boolean;
-   likesArr:Array<Icard>;
    deleteLike:Function;
+   likesArr:Array<Icard>;
   }
 
-function Favourites({userId,handleLike,isAdmin,likesArr,deleteLike}:Props) {
+function Favourites({userId,handleLike,isAdmin,deleteLike,likesArr}:Props) {
 
     const [display,setDisplay]=useState('grid');
+    const [likes,setLikes]=useState<Array<Icard>>([]);
+    const [error, setError] = useState<string>('');
 
-    
+    function setArr (){
+      if(localStorage.likesArrLocal){
+        var likeArrLocal = JSON.parse(localStorage.likesArrLocal);
+        setLikes(likeArrLocal);
+      }else{
+         setError('You have not selected favourites yet!');
+         return;
+      }
+    }
+    useEffect(setArr,[]);
+
     function delCard(card:Icard){
-      const index=likesArr.indexOf(card);
+      const index=likes.indexOf(card);
       deleteLike(index);     
     }
 
@@ -30,8 +43,16 @@ function Favourites({userId,handleLike,isAdmin,likesArr,deleteLike}:Props) {
           sub="Here you will find your favourits cards"
         />
         <DisplayCard
-         display={display} cardsArr={likesArr} userId={userId} isAdmin={isAdmin} delCard={delCard} likesArr={likesArr} handleLike={handleLike}
+         likesArr={likesArr} userId={userId} display={display} cardsArr={likes}  isAdmin={isAdmin} delCard={delCard} handleLike={handleLike}
         />
+        {
+          error &&
+          <div className="h-50">
+          <h3 className="text-danger text-center">
+                {error}
+          </h3>
+          </div>
+        }
 
         <Footer/>  
         </>

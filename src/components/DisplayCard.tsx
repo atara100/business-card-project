@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Icard } from "../pages/Home";
 
@@ -7,17 +8,16 @@ interface Props{
  userId:string;
  isAdmin:boolean;
  delCard:Function;
- likesArr:Array<Icard>;
  handleLike:Function;
+ likesArr:Array<Icard>;
 }
 
-function DisplayCard({display,cardsArr,userId,isAdmin,delCard,likesArr,handleLike}:Props) {
-
+function DisplayCard({display,cardsArr,userId,isAdmin,delCard,handleLike,likesArr}:Props) {
+    
     function buttonLike(card:Icard){
       handleLike(card);         
     } 
     
-//p-3 mx-auto
     return ( 
         <div className={`${display} p-5 row`}>
           {
@@ -31,8 +31,8 @@ function DisplayCard({display,cardsArr,userId,isAdmin,delCard,likesArr,handleLik
                  <hr />
                  <h6 className="card-text"><b>Tel:</b> {card.phone}</h6>
                  <h6 className="card-text"><b>Address:</b> {card.address}</h6>
-                 <h6 className="card-text"><b>Card Number:</b> {card.bizNumber}</h6>       
-                  <button onClick={()=>buttonLike(card)} className="btn"><i className={`bi bi-hand-thumbs-up`}></i></button>
+                 <h6 className="card-text"><b>Card Number:</b> {card.bizNumber}</h6>      
+                 <button onClick={()=>buttonLike(card)} className="btn"><i className={`bi bi-hand-thumbs-up`}></i></button>
               </div>
               {
                  (userId===card.user_id || isAdmin) &&

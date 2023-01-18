@@ -81,7 +81,7 @@ function MyCards({userId,isAdmin,handleLike,likesArr}:Props) {
         />
 
         <DisplayCard
-         display={display} cardsArr={filtered} handleLike={handleLike} userId={userId} isAdmin={isAdmin} delCard={delCard} likesArr={likesArr}
+         likesArr={likesArr} userId={userId} display={display} cardsArr={filtered} handleLike={handleLike} isAdmin={isAdmin} delCard={delCard}
         />
 
         <Footer/>

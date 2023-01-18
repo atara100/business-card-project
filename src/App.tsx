@@ -35,6 +35,7 @@ interface Context{
   isAdmin:boolean;
   handleLike:Function;
   deleteLike:Function;
+  likesArr:Array<Icard>;
 }
 
 export const AppContext = createContext <Context | null>(null);
@@ -106,18 +107,30 @@ function App() {
       const updateLike=[...likesArr];
       updateLike.push(card);
       setLikesArr(updateLike);
+      localStorage.setItem('likesArrLocal', JSON.stringify(updateLike));
     }            
   }
 
    function deleteLike(index:number){
     likesArr.splice(index, 1);
     setLikesArr(likesArr);
-    navigate('/favourites');
+    localStorage.setItem('likesArrLocal', JSON.stringify(likesArr));
+         toast.success(`The card deleted successfully from favourites`,{
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                progress: undefined,
+                theme: "colored",
+            });
+            navigate('/');
    }
 
 
   return (
-  <AppContext.Provider value={{login,handlelogout,userEmail,userId,userName,userBiz,isAdmin,handleLike,deleteLike}}>
+  <AppContext.Provider value={{login,handlelogout,userEmail,userId,userName,userBiz,isAdmin,handleLike,deleteLike,likesArr}}>
 
     <Header userId={userId} userName={userName}/>
     <ToastContainer/>
@@ -125,7 +138,7 @@ function App() {
     <Routes>
 
       <Route path='/' element=
-      {<RouteGuard><Home likesArr={likesArr} isAdmin={isAdmin} userId={userId} userEmail={userEmail} handleLike={handleLike}/></RouteGuard>}>
+      {<RouteGuard><Home likesArr={likesArr}  isAdmin={isAdmin} userId={userId} userEmail={userEmail} handleLike={handleLike}/></RouteGuard>}>
       </Route>
 
       <Route path='/about' element={<About/>}></Route>
@@ -153,7 +166,7 @@ function App() {
       <Route path='/details/:id' element={<RouteGuard><Details/></RouteGuard>}></Route>
 
       <Route path='/favourites' element=
-      {<RouteGuard><Favourites likesArr={likesArr} isAdmin={isAdmin} userId={userId} handleLike={handleLike} deleteLike={deleteLike}/></RouteGuard>}>
+      {<RouteGuard><Favourites likesArr={likesArr}  isAdmin={isAdmin} userId={userId} handleLike={handleLike} deleteLike={deleteLike}/></RouteGuard>}>
       </Route>
 
     </Routes>
