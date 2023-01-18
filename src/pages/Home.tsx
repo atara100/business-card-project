@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { getToken } from "../auth/tokenManager";
+import {useEffect, useState } from "react";
+import {Link } from "react-router-dom";
+import BackButton from "../components/BackButton";
 import ButtonsBar from "../components/ButtonsBar";
+import DisplayCard from "../components/DisplayCard";
 import Footer from "../components/Footer";
 import Title from "../components/Title";
 import { deleteRequest, getRequest } from "../services/apiService";
 import './Home.css';
-
 export interface Icard{
    _id:number;
    title:string;
@@ -18,25 +18,24 @@ export interface Icard{
    bizNumber:string;
    createdAt:Date;
    user_id:string;
-   
 }
 
 interface Props{
   userEmail:string;
    userId:string;
+   handleLike:Function;
+   isAdmin:boolean;
    likesArr:Array<Icard>;
   }
 
-function Home({userEmail,userId,likesArr}:Props) {
+function Home({userId,handleLike,isAdmin,likesArr}:Props) {
     
-    const navigate=useNavigate()
     const [displayCards,setDisplayCards]=useState<Array<Icard>>([]);
     const [display,setDisplay]=useState('grid');
     const [filtered,setFiltered]=useState([...displayCards]);
     const [search,setSearch]=useState('');
-    const [likes,setLikes]=useState<Array<Icard>>([]);
 
-       function fetchDisplayCards(){
+    function fetchDisplayCards(){
        const res=getRequest('cards');
          if(!res) return;
         res.then(res=>res.json())
@@ -72,25 +71,21 @@ function Home({userEmail,userId,likesArr}:Props) {
              })
     }
 
-    function handlelLike(card:Icard){
-      likes.push(card);
-      setLikes(likes);     
-    }
 
-    // function navigateDetails(cardid:number){
-    //   navigate(`/details/${cardid}`);
-    // }
-
-
+       
     return ( 
         <>
-       {
-         userEmail &&
-<>
+        <> 
+          <BackButton/> 
+
         <Title 
           main= "Business Card App"
           sub="Here you will find business cards"
         />
+
+        <Link to={`/businesscard`} className="btn btn-primary mb-3 ms-3">
+            <i className="bi bi-plus-circle-fill me-2"></i> Add Card
+        </Link>
 
         <ButtonsBar
             updateDisplay={setDisplay}
@@ -98,48 +93,11 @@ function Home({userEmail,userId,likesArr}:Props) {
             handleSearch={handleSearch}
         />
 
-         <div className={`${display} p-5`}>
-          {
-           filtered.map((card)=>
-           <div key={card._id} className="card p-3 colms-5 cardWidth">
-              <img src={card.image} className="card-img-top" alt={card.title}/>
-              <div className="card-body">
-                 <h5 className="card-title">{card.title}</h5>
-                 <h6 className="card-title">{card.shortdescription}</h6>
-                 <hr />
-                 <h6 className="card-text"><b>Tel:</b> {card.phone}</h6>
-                 <h6 className="card-text"><b>Address:</b> {card.address}</h6>
-                 <h6 className="card-text"><b>Card Number:</b> {card.bizNumber}</h6>
-                 <button onClick={()=>handlelLike(card)} className="btn"><i className="bi bi-hand-thumbs-up"></i></button>
-              </div>
-              {
-                 userId===card.user_id &&
-              <div className="card-body mx-auto">
-                <Link to={`/updatecard/${card._id}`} className="btn btn-light me-3"><i className="bi bi-pencil-fill "></i></Link>
-                <button onClick={()=>delCard(card)} className="btn btn-light"><i className="bi bi-trash3-fill"></i></button>
-              </div>
-              }
-              <div className="mx-auto">
-                <Link to={`/details/${card._id}`} className="btn btn-light ">See Deatails</Link>
-              </div>
+        <DisplayCard
+         handleLike={handleLike} display={display} cardsArr={filtered} userId={userId} isAdmin={isAdmin} delCard={delCard} likesArr={likesArr}
+        />
 
-            </div>  
-            )
-           } 
-         </div>
         </> 
-  }
-
-  {
-    !userEmail &&
-    <div className="text-center mt-5">
-      <h1>HELLO</h1>
-      <br/>
-      <h4>Please login to see all the business card!</h4>
-      <br/>
-      <Link to={'/login'} className="btn btn-primary ">Go Login</Link>
-    </div>
-  }
   
         <Footer/>  
         </>

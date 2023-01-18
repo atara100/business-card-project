@@ -14,6 +14,9 @@ export const verifyToken= ():boolean =>{
     return token.length > 0 ;
 }
 
+// export const removeToken =()=>{
+//   return  localStorage.removeItem(TOKEN_KEY);
+// }
 export const removeToken =()=>{
-  return  localStorage.removeItem(TOKEN_KEY);
+  return  localStorage.clear();
 }

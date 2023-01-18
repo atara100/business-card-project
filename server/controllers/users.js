@@ -20,7 +20,7 @@ module.exports = {
             }
 
             const user = await User.findOne({ email: value.email });
-            if (!user) throw Error;
+            if (!user) throw 'Invalid email';
             const validPassword = await bcrypt.compare(value.password, user.password);
             if (!validPassword) throw 'Invalid password';
 
@@ -38,7 +38,7 @@ module.exports = {
         }
         catch (err) {
             console.log(`Error: ${err}`);
-            res.status(401).json({ error: 'Unauthorized' });
+            res.status(401).json({ error: `${err}` });
             return;
         }
     },

@@ -19,6 +19,7 @@ function Business() {
  const [password,setPassword]=useState<string>('');
  const [name,setName]=useState<string>('');
  const [isBiz,setIsBiz]=useState<boolean>(true);
+ const [error, setError] = useState<string>('');
 
  function submit(){
       const schema = Joi.object().keys({
@@ -36,10 +37,10 @@ function Business() {
         });
 
         if (error) {
-            console.log(error.message);
+            setError(error.message);
             return;
         }
-
+      setError('');
       register(value);
  }
 
@@ -92,6 +93,13 @@ function Business() {
             <button onClick={submit} className="btn btn-primary btn-lg w-50 mx-auto">
                 Next
             </button>
+
+            {
+                error &&
+                <div className="text-danger text-center">
+                    {error}
+                </div>
+            }
 
         </div>
      </>

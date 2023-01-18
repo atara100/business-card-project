@@ -3,20 +3,19 @@ import { toast } from "react-toastify";
 import { verifyToken } from "./tokenManager";
 
 interface Props{
-    children: React.ReactNode
+    children: React.ReactNode;
     userBiz:boolean;
-    isAdmin:boolean;
 }
 
-function RouteGuardBiz({children,userBiz,isAdmin}:Props) {
+function RouteGuardOnlyBiz({children,userBiz}:Props) {
 
-    return verifyToken() && (userBiz || isAdmin) ? (
+    return verifyToken() &&  userBiz ? (
         <>{children}</>
     ) : (
         <>
         {
-            
-        toast.error('You are not buziness user!', {
+        toast.error('You are not buziness user!',
+         {
              position: "top-center",
              autoClose: 5000,
              hideProgressBar: false,
@@ -28,10 +27,9 @@ function RouteGuardBiz({children,userBiz,isAdmin}:Props) {
              })
              
         }
-
         <Navigate to={'/'}  />
-        </>
+        </>       
     )
 }
 
-export default RouteGuardBiz;
+export default RouteGuardOnlyBiz;

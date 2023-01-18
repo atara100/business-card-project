@@ -51,7 +51,7 @@ module.exports = {
             }
 
             const user = await User.findById({_id:value.id});
-            if (!user || !user.isBiz) throw "Invalid user id, no such user.";
+            if (!user || !user.isBiz ) throw "Invalid user id, no such user.";
 
             const cards = await Card.find({ user_id: user._id });
             res.json(cards);
@@ -106,7 +106,7 @@ module.exports = {
     updateDetails: async function (req, res, next) {
         try {
             const user = await User.findOne({ email: req.token.email });
-            if (!user || !user.isBiz) throw "Not a business user";
+            if (!user || (!user.isBiz && !user.isAdmin) ) throw "Not a business user";
 
             const schema = joi.object({
                 title: joi.string().min(2).max(256).required(),
@@ -126,7 +126,7 @@ module.exports = {
 
             const filter = {
                 _id: req.params.id,
-                userID: user._id,
+                userID: user._id ,
             };
 
             const card = await Card.findOneAndUpdate(filter, value);
@@ -165,4 +165,5 @@ module.exports = {
             res.status(400).json({ error: `error delete card` });
         }
     },
+
 }

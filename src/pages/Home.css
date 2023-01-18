@@ -12,4 +12,6 @@
 
 .cardWidth{
     width: 19rem;
+    display: flex;
+    justify-content: end;
 }

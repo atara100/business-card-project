@@ -17,7 +17,8 @@ function SignUp() {
  const [email,setEmail]=useState<string>('');
  const [password,setPassword]=useState<string>('');
  const [name,setName]=useState<string>('');
-  const [isBiz,setIsBiz]=useState<boolean>(false);
+ const [isBiz,setIsBiz]=useState<boolean>(false);
+ const [error, setError] = useState<string>('');
 
  function submit(){
       const schema = Joi.object().keys({
@@ -35,10 +36,10 @@ function SignUp() {
         });
 
         if (error) {
-            console.log(error.message);
+            setError(error.message);
             return;
         }
-
+      setError('');
       register(value);
  }
 
@@ -91,6 +92,13 @@ function SignUp() {
             <button onClick={submit} className="btn btn-primary btn-lg w-50 mx-auto">
                 Sign Up
             </button>
+
+            {
+                error &&
+                <div className="text-danger text-center">
+                    {error}
+                </div>
+            }
 
         </div>
      </>

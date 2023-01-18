@@ -11,7 +11,7 @@ function ButtonsBar({updateDisplay,search,handleSearch}:Props) {
           <div>
 
             <div className="d-flex align-items-center">
-              <input className="forn-control ms-3" placeholder="Search" type="text"
+              <input className="forn-control p-1 mb-3" placeholder="Search" type="text"
               value={search} onChange={(e)=> handleSearch(e)}/>
             </div>
 

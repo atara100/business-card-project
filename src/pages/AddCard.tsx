@@ -1,6 +1,8 @@
 import Joi from "joi";
 import {useState } from "react";
 import { useNavigate} from "react-router-dom";
+import { toast } from "react-toastify";
+import BackButton from "../components/BackButton";
 import Title from "../components/Title";
 import {postRequest } from "../services/apiService";
 import { Icard } from "./Home";
@@ -14,6 +16,7 @@ function BusinessCard() {
     const [address,setaddress]=useState<string>('');
     const [phone,setphone]=useState<string>('');
     const [image,setimage]=useState<string>('');
+    const [error, setError] = useState<string>('');
 
 
     function handleClick(){
@@ -36,11 +39,12 @@ function BusinessCard() {
         });
 
         if (error) {
-            console.log(error.message);
+            setError(error.message);
             return;
         }
         
-        createCard(value);
+        setError('');
+        createCard(value);      
     }
 
     function createCard(card:Icard){
@@ -49,16 +53,36 @@ function BusinessCard() {
             res.then(res => res.json())
              .then(json => {
                     if (json.error) {
-                    console.log(json.error);
+                    toast.error(json.error, {
+                        position: "top-center",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark",
+                    });
                     return;
                 }
-         navigate('/login');
+                toast.success(`The card add successfulliiy`,{
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                progress: undefined,
+                theme: "colored",
+                });  
+                navigate('/');
             })
 
     }
     
     return ( 
     <>
+        <BackButton/>
         <Title main="Business Registration Form"
                 sub="Open business card"
         />
@@ -106,6 +130,11 @@ function BusinessCard() {
             </button>
 
         </div>
+
+        {
+        error &&
+         <div className="text-danger text-center"> {error}</div>
+        }
      </>
      );
 }

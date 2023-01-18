@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import BackButton from "../components/BackButton";
 import Footer from "../components/Footer";
 import Title from "../components/Title";
 import { getRequest } from "../services/apiService";
@@ -40,17 +41,18 @@ function Details() {
 
     return ( 
         <>
+        <BackButton/>
         <Title
          main="Card Details" sub="Here you will find all the details about the card:"
         /> 
         <hr className="mx-5" />
 
-        <div className="row w-75 p-3 col position-absolute top-50 start-50 translate-middle  mt-5 mx-auto">
-            <div className="col d-flex align-items-center ">
+        <div className="row w-75 p-3 mx-auto mt-5">
+            <div className="col col-10 col-sm-10 col-md-6 col-lg-8 d-flex align-items-center ">
                {description}
             </div>
 
-            <div className="card w-25 p-3 col-md-auto ">
+            <div className="card w-25 p-3 col col-14 col-sm-14 col-md-4 col-lg-8 ms-5">
               <img src={image} className="card-img-top" alt="..."/>
               <div className="card-body">
                  <h5 className="card-title">{title}</h5>

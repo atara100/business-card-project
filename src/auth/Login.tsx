@@ -9,7 +9,9 @@ interface Props{
 function Login({login}:Props) {
 
  const [email,setEmail]=useState<string>('');
- const [password,setPassword]=useState<string>('')
+ const [password,setPassword]=useState<string>('');
+ const [error, setError] = useState<string>('');
+
 
   function submit(){
     const schema = Joi.object().keys({
@@ -23,10 +25,10 @@ function Login({login}:Props) {
         });
 
         if (error) {
-            console.log(error.message);
+            setError(error.message);
             return;
         }
-
+        setError('');
         login(value);
   }
 
@@ -54,6 +56,13 @@ function Login({login}:Props) {
                 className="btn btn-primary btn-lg w-50 mx-auto" onClick={submit}>
                 Login
             </button>
+
+            {
+                error &&
+                <div className="text-danger text-center">
+                    {error}
+                </div>
+            }
         </div>
     </>
     );

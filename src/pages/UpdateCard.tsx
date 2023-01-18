@@ -1,6 +1,7 @@
 import Joi from "joi";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import BackButton from "../components/BackButton";
 import Title from "../components/Title";
 import { getRequest, patchRequest } from "../services/apiService";
 import { Icard } from "./Home";
@@ -16,6 +17,7 @@ function UpdateCard() {
     const [address,setaddress]=useState<string>('');
     const [phone,setphone]=useState<string>('');
     const [image,setimage]=useState<string>('');
+    const [error, setError] = useState<string>('');
 
     useEffect(()=>{
       const res=getRequest(`cards/${id}`);
@@ -55,9 +57,10 @@ function UpdateCard() {
         });
 
         if (error) {
-            console.log(error.message);
+            setError(error.message);
             return;
         }
+        setError('');
         updateCard(value)
     }
 
@@ -76,12 +79,19 @@ function UpdateCard() {
     }
 
     return ( 
-            <>
+    <>
+        <BackButton/>
         <Title main="Update Business Registration Form"
                 sub="update business card"
-        />
+        />        
+            {
+                error &&
+                <div className="text-danger text-center">
+                    {error}
+                </div>
+            }
 
-        <div className=" form-max-w m-aotu row w-50 p-3 mx-auto mt-5">
+        <div className="form-max-w  bg-light m-4 w-50 mx-auto" >
 
             <div className="mb-3 ">
                 <label className="mb-2" htmlFor="">Business Name</label>
@@ -119,11 +129,16 @@ function UpdateCard() {
                 value={image} onChange={(e)=>setimage(e.target.value)}/>
             </div>
 
-            <button onClick={handleClick} className="btn btn-primary btn-lg w-50 mx-auto">
+            <button onClick={handleClick} className="btn btn-info ms-3">
                 Update Card
             </button>
 
+            <Link to='/' className="btn btn-secondary ms-3 me-3" >
+                Cancele
+            </Link>
+            
         </div>
+
      </>
      );
 }
